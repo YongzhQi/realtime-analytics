@@ -1,0 +1,122 @@
+{
+  "folders": [
+    {
+      "path": "connect"
+    },
+    {
+      "path": "dashboard"
+    },
+    {
+      "path": "infra"
+    },
+    {
+      "path": "ingestion-service"
+    },
+    {
+      "path": "processor-service"
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "java.configuration.updateBuildConfiguration": "automatic"
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Up: Infra",
+        "type": "shell",
+        "command": "docker compose up -d",
+        "options": { "cwd": "${workspaceFolder:infra}" },
+        "presentation": { "reveal": "always", "panel": "dedicated" }
+      },
+      {
+        "label": "Down: Infra",
+        "type": "shell",
+        "command": "docker compose down -v",
+        "options": { "cwd": "${workspaceFolder:infra}" },
+        "presentation": { "reveal": "always", "panel": "dedicated" }
+      },
+      {
+        "label": "Topics: Create",
+        "type": "shell",
+        "command": "bash scripts/create-topics.sh",
+        "options": { "cwd": "${workspaceFolder:infra}" },
+        "presentation": { "reveal": "always", "panel": "dedicated" },
+        "problemMatcher": []
+      },
+      {
+        "label": "Ingestion: BootRun",
+        "type": "shell",
+        "command": "./gradlew",
+        "args": ["bootRun"],
+        "options": { "cwd": "${workspaceFolder:ingestion-service}" },
+        "windows": { "command": "gradlew.bat" },
+        "isBackground": true,
+        "presentation": { "reveal": "always", "panel": "dedicated" }
+      },
+      {
+        "label": "Processor: BootRun",
+        "type": "shell",
+        "command": "./gradlew",
+        "args": ["bootRun"],
+        "options": { "cwd": "${workspaceFolder:processor-service}" },
+        "windows": { "command": "gradlew.bat" },
+        "isBackground": true,
+        "presentation": { "reveal": "always", "panel": "dedicated" }
+      },
+      {
+        "label": "Dashboard: Start",
+        "type": "shell",
+        "command": "npm",
+        "args": ["start"],
+        "options": { "cwd": "${workspaceFolder:dashboard}" },
+        "isBackground": true,
+        "presentation": { "reveal": "always", "panel": "dedicated" }
+      },
+
+      { "label": "Infra: Start", "dependsOn": ["Up: Infra", "Topics: Create"], "dependsOrder": "sequence" },
+      { "label": "Apps: Start", "dependsOn": ["Ingestion: BootRun", "Processor: BootRun"], "dependsOrder": "parallel" },
+
+      {
+        "label": "All: Start",
+        "dependsOn": ["Infra: Start", "Apps: Start"],
+        "dependsOrder": "sequence"
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "java",
+        "name": "Debug: IngestionApplication",
+        "request": "launch",
+        "mainClass": "com.example.ingestion.IngestionApplication",
+        "projectName": "ingestion-service",
+        "cwd": "${workspaceFolder:ingestion-service}"
+      },
+      {
+        "type": "java",
+        "name": "Debug: ProcessorApplication",
+        "request": "launch",
+        "mainClass": "com.example.processor.ProcessorApplication",
+        "projectName": "processor-service",
+        "cwd": "${workspaceFolder:processor-service}"
+      },
+      {
+        "type": "pwa-chrome",
+        "request": "launch",
+        "name": "Debug: React Dashboard",
+        "url": "http://localhost:3000",
+        "webRoot": "${workspaceFolder:dashboard}"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "Debug: Both Spring Services",
+        "configurations": ["Debug: IngestionApplication", "Debug: ProcessorApplication"]
+      }
+    ]
+  }
+}
