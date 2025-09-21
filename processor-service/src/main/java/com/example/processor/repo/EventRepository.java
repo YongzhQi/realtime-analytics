@@ -21,7 +21,7 @@ public class EventRepository {
     }
 
     public int[] batchInsert(List<WebEvent> events) {
-        String sql = "INSERT INTO events (event_id, session_id, event_type, ts, payload) " +
+        String sql = "INSERT INTO web_events (event_id, session_id, event_type, ts, payload) " +
                      "VALUES (?, ?, ?, ?, ?::jsonb) " +
                      "ON CONFLICT (event_id) DO NOTHING";
 

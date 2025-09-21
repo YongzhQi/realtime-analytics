@@ -33,3 +33,9 @@ dashboard/.env.*.local
 
 # Docker
 *.pid
+
+# Load testing documentation (for private use)
+LOAD_TEST.md
+
+# Environment variables
+.env

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.example.processor.metrics.MetricsService;
 import com.example.processor.model.WebEvent;
 import com.example.processor.repo.EventRepository;
+import com.example.processor.s3.S3EventArchiver;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,11 +26,14 @@ public class EventConsumer {
     private final EventRepository repository;
     private final ObjectMapper objectMapper;
     private final MetricsService metrics;
+    private final S3EventArchiver s3Archiver;
 
-    public EventConsumer(EventRepository repository, ObjectMapper objectMapper, MetricsService metrics) {
+    public EventConsumer(EventRepository repository, ObjectMapper objectMapper, 
+                        MetricsService metrics, S3EventArchiver s3Archiver) {
         this.repository = repository;
         this.objectMapper = objectMapper;
         this.metrics = metrics;
+        this.s3Archiver = s3Archiver;
     }
 
     // Be explicit about which container factory to use
@@ -51,6 +55,9 @@ public class EventConsumer {
         for (ConsumerRecord<String, String> rec : records) {
             String json = rec.value();
             JsonNode node = objectMapper.readTree(json);
+
+            // Archive to S3 (async)
+            s3Archiver.archiveEvent(json);
 
             WebEvent e = new WebEvent();
             e.setEventId(node.hasNonNull("eventId") ? node.get("eventId").asText() : UUID.randomUUID().toString());

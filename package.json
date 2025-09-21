@@ -1,0 +1,16 @@
+{
+  "name": "realtime-analytics",
+  "version": "1.0.0",
+  "description": "This repo contains:",
+  "main": "load-test.js",
+  "scripts": {
+    "load-test": "node load-test.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eventsource": "^4.0.0"
+  }
+}

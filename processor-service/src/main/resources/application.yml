@@ -26,6 +26,12 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 2
 
+# S3 Configuration
+s3:
+  enabled: ${S3_ENABLED:false}
+  bucket:
+    name: ${S3_BUCKET_NAME:realtime-analytics-yongqi}
+
 management:
   endpoints:
     web:
