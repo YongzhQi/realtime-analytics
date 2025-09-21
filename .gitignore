@@ -28,6 +28,14 @@ dist/
 *.env
 *.env.*.local
 infra/.env
+
+# Temporary downloads and generated files
+confluentinc-kafka-connect-s3-*.zip
+kafka_*
+*.tgz
+connect-standalone.properties
+s3-sink.properties
+setup-s3-manual.sh
 dashboard/.env
 dashboard/.env.*.local
 
