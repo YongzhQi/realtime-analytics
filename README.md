@@ -38,7 +38,7 @@ curl -X POST http://localhost:8081/events \
   -d '{"sessionId":"s-1","eventType":"page_view","payload":"{\"path\":\"/\"}"}'
 ```
 
-### 4) Dashboard (optional)
+### 4) Dashboard
 
 ```bash
 cd dashboard
@@ -48,7 +48,7 @@ npm run dev
 # open http://localhost:5173
 ```
 
-### 5) Kafka Connect → S3 (optional)
+### 5) Kafka Connect → S3
 
-- Put AWS keys in `infra/.env` (not committed).
+- Put AWS keys in `infra/.env`.
 - Start with override profile and POST the connector JSON in `infra/connectors/`.
